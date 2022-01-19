@@ -1,23 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEtherBalance, useEthers, useTokenBalance } from "@usedapp/core";
+import { formatEther } from "@ethersproject/units";
+import "./App.css";
 
 function App() {
+  const { activateBrowserWallet, account, chainId, deactivate } = useEthers();
+  const tokenAddress = "0x76A8b4813bB860488C3f14d5B51E77f2740E8c90";
+  const tokenBalance = useTokenBalance(tokenAddress, account);
+  const etherBalance = useEtherBalance(account);
+  console.log("etherBalance: ", Number(etherBalance) / 10 ** 18);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div>
+        <button onClick={() => activateBrowserWallet()}>Connect</button>
+        <button onClick={() => deactivate()}>Disconnect</button>
+      </div>
+      {chainId && <p>Chain Id: {chainId} </p>}
+      {etherBalance && <p>Ether balance: {formatEther(etherBalance)} ETH </p>}
+      {tokenBalance && <p>Token Balance:{formatEther(tokenBalance)} RWD</p>}
     </div>
   );
 }
